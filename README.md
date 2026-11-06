@@ -1,6 +1,6 @@
-# How Much of the Somatic Mutation Landscape Is Callable from 3′ scRNA-seq?
+# Detectability of somatic SNVs in 3′-end single-cell RNA-seq data of cancer cell lines?
 
-Analysis code for a feasibility study: **what fraction of known somatic driver mutations can actually be detected in 3′-end single-cell RNA-seq (scRNA-seq) data?**
+Analysis code for a feasibility study: **Detectability of somatic SNVs in 3′-end single-cell RNA-seq data of cancer cell lines**
 
 Calling variants from scRNA-seq is a popular route to study genetic heterogeneity in cancer. But 3′ protocols only sequence a short stretch at the end of each transcript, so most of a gene body is never read. Before building any variant-based heterogeneity analysis on this data, you need to know how much of the mutational signal is observable at all. This repository answers that question and checks one proposed explanation: that callability depends on how far a mutation sits from the 3′ end of its transcript.
 
