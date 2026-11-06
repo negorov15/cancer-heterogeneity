@@ -1,0 +1,6 @@
+input/
+output/
+.pytest_cache/
+__pycache__/
+.venv/
+.DS_Store
