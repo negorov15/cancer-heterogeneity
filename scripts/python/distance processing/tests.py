@@ -2,7 +2,6 @@ import pytest
 import pandas as pd
 from main import get_transcript, get_exons, get_strand
 from calculate_distance import calculate_distance
-from filter_variants import filter_variants
 
 # Test data
 VARIANTS = [100, 104, 109, 200, 204, 209, 300, 304, 309, 400, 605]
