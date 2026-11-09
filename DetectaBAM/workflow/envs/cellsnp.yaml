@@ -1,0 +1,4 @@
+channels: [conda-forge, bioconda]
+dependencies:
+  - cellsnp-lite=1.2.3
+  - samtools>=1.12

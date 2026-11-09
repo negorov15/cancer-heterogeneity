@@ -1,0 +1,5 @@
+# envs/subset.yaml
+channels: [conda-forge, bioconda]
+dependencies:
+  - subset-bam=1.1
+  - samtools>=1.12

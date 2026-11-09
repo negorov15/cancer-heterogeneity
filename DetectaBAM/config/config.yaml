@@ -1,0 +1,2 @@
+cell_lines: resources/cell_lines.tsv
+truthset_dir: "resources/gene_list_bed"       # per-line DepMap positions: {line}_mutations.bed

@@ -1,0 +1,5 @@
+# envs/samtools.yaml  — for the depth + index rules
+channels: [conda-forge, bioconda]
+dependencies:
+  - samtools>=1.12
+  - pandas        # callability_summary uses it

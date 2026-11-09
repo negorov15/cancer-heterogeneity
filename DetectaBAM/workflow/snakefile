@@ -1,0 +1,18 @@
+import pandas as pd
+
+configfile: "config/config.yaml"
+LINES = pd.read_csv(config["cell_lines"], sep="\t", index_col="cell_line")
+
+include: "rules/coverage.smk"
+include: "rules/cellsnp.smk"
+
+rule all:
+    input:
+        expand("results/cellsnp/{line}/cellSNP.base.vcf.gz", line=LINES.index),
+        expand("results/bw/{line}.bw", line=LINES.index)
+
+rule cellsnp_all:
+    input: expand("results/cellsnp/{line}/cellSNP.base.vcf.gz", line=LINES.index)
+
+rule bw_all:
+    input: expand("results/bw/{line}.bw", line=LINES.index)
