@@ -5,6 +5,7 @@ __pycache__/
 .venv/
 .DS_Store
 .snakemake/
+.vscode/
 results/
 resources/
 logs/
