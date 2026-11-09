@@ -81,14 +81,3 @@ if __name__ == "__main__":
             f.write(f"{gene}\t{expression}\n")
 
     print(f"Wrote {len(sorted_genes):,} genes to {output_file}")
-
-    # Intersection: genes detected in ALL matrices
-    # Filter out any empty sets (in case of errors):
-    # detected_per_matrix = [s for s in detected_per_matrix if s]
-    # universal = set.intersection(*detected_per_matrix)
-    # print(f"\nGenes detected in ALL matrices: {len(universal):,}")
-
-    # Save the list:
-    # with open("output/gene list/universal_genes.txt", "w") as f:
-    #     for g in sorted(universal):
-    #         f.write(g + "\n")

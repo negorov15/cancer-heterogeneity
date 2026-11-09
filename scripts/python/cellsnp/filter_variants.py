@@ -66,6 +66,3 @@ if __name__ == "__main__":
         #cl_expressed_vars.to_csv(f"{outdir}/expressed_variants.csv", sep="\t", index=False)
         #cl_not_expressed_vars.to_csv(f"{outdir}/not_expressed_variants.csv", sep="\t", index=False)
         #not_in_depmap.to_csv(f"{outdir}/not_in_depmap_variants.csv", sep="\t", index=False)
-
-        
-    

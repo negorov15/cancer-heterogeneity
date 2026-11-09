@@ -4,3 +4,8 @@ output/
 __pycache__/
 .venv/
 .DS_Store
+.snakemake/
+results/
+resources/
+logs/
+profiles/

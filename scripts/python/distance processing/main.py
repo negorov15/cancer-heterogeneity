@@ -83,13 +83,13 @@ def main(status):
     """
     Calculate distances for expressed variants
     """
-    # ------ Load annotation data and create a dictionary for faster access -----
+    # Load annotation data and create a dictionary for faster access
     annotation_file = "output/gtf/gtf_exons_only.csv"
     annotation_df = pd.read_csv(annotation_file, sep=",")
     annotation_dict = create_chr_dict(annotation_df)
     # Load cell lines
     cell_lines = pd.read_csv("input/cell_lines_modelids.tsv",sep="\t")
-    # ----- Loop through each cell line and process its variants -----
+    # Loop through each cell line and process its variants
     for line in cell_lines["Cell line"]:
         print(f"Processing cell line: {line}")
         results = []
@@ -122,7 +122,7 @@ def main(status):
             final_dist = mean(distances)
             results.append((chr, var_pos, final_dist))
 
-        # ----- Save the results to a CSV file -----
+        # Save the results to a CSV file
         results_df = pd.DataFrame(results, columns=["CHROM", "POS", "Distance to 3'end"])
         output_dir = f"output/distances/{line}"
         os.makedirs(output_dir, exist_ok=True)

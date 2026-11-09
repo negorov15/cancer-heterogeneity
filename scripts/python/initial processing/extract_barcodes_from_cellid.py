@@ -57,7 +57,6 @@ def detect_separator(input_file):
         for sep in ["\t", ",", ";", " ", "|"]:
             if sep in first_line:
                 return sep
-
         # Default to tab
         return "\t"
     except Exception:
