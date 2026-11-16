@@ -10,7 +10,6 @@ Calling variants from scRNA-seq is a popular route to study genetic heterogeneit
 ## Contents
 
 - [Study design](#study-design)
-- [Repository layout](#repository-layout)
 - [Data](#data)
 - [Setup](#setup)
 - [Workflow](#workflow)
@@ -44,55 +43,22 @@ The cell line / ModelID mapping lives in `input/cell_lines_modelids.tsv` and dri
 
 ---
 
-## Repository layout
-
-```
-.
-├── config/
-│   └── config.R                      # Shared constants for the R coverage plots
-├── scripts/
-│   ├── python/
-│   │   ├── initial processing/       # Barcodes, gene lists, sample sheets
-│   │   ├── cellsnp/                  # Truth-set filtering, callability stats and plots
-│   │   └── distance processing/      # 3′-end distance calculation, ECDF plots, unit tests
-│   └── R/
-│       └── plot_track.R              # Gviz coverage track with the mutation highlighted
-├── input/                            # Not tracked
-└── output/                           # Not tracked
-```
-
-### Scripts
-
-| Script | Purpose |
-|---|---|
-| `initial processing/extract_barcodes_from_cellid.py` | Extracts the 20-nt cell barcode from each count-matrix column name (`<barcode>.<flowcell><lane>`), writes one barcode list per cell line, and reports barcodes shared between cell lines. |
-| `initial processing/get_list_of_genes.py` | Ranks genes by total UMI count for one count matrix and writes `<line>_genes_sorted_by_expression.txt`. |
-| `initial processing/get_cell_lines.py` | Lists the flowcell IDs found for each cell line. |
-| `initial processing/create_csv.py` | Builds a cell line sample sheet (`resources/cell_lines.tsv`) with barcode and gene-list paths for the upstream pipeline. |
-| `cellsnp/filter_variants.py` | Filters DepMap to default-entry SNVs per line and splits them into expressed / not expressed / not in the expression table. |
-| `cellsnp/1_calculate_stats.py` | Loads `cellsnp-lite` DP/AD matrices and computes callability at DP thresholds 1, 5, 10, 20. |
-| `cellsnp/2_plot.py` | Per-line bar plots, the pooled summary table, and the decay-curve overlay. |
-| `distance processing/calculate_distance.py` | Core function: distance from a variant to the transcript 3′ end, measured in transcript (spliced) coordinates. |
-| `distance processing/main.py` | Runs the distance calculation for every variant in every cell line. |
-| `distance processing/process_gtf.ipynb` | Parses the GENCODE GTF into an exon table (all exons and `basic`-tagged transcripts only). |
-| `distance processing/plot_results.py` | ECDF of 3′ distance for not-expressed variants vs. expressed variants with low depth (1–5) and high depth (≥16). |
-| `R/plot_track.R` | Gviz plot of a coverage bigWig over a gene, with the mutation highlighted in red. |
-
----
 
 ## Data
 
-| Input | Expected location | Source |
-|---|---|---|
-| Cell line / ModelID table | `input/cell_lines_modelids.tsv` | Tab-separated, columns `Cell line`, `Model_ID` |
-| DepMap somatic mutations | `input/OmicsSomaticMutations.csv` | [DepMap portal](https://depmap.org/portal/) |
-| Per-cell-line expression ranking | `input/ExpressionData/<line>/<line>_genes_sorted_by_expression.txt` | Output of `get_list_of_genes.py` |
-| `cellsnp-lite` output | `cellSNP.base.vcf.gz`, `cellSNP.tag.DP.mtx`, `cellSNP.tag.AD.mtx`, `cellSNP.tag.OTH.mtx`, `cellSNP.samples.tsv` | Upstream pipeline |
-| Gene annotation | `input/gtf/genes.gtf` | GENCODE v32 (Ensembl 98), GRCh38 |
-| Coverage tracks | `input/bw/<line>.bw` | `deepTools bamCoverage` |
-| Count matrices | `<line>.count_mtx.tsv.txt` |  |
+| Input | Source |
+|---|---|
+| Raw scRNA-seq data in FASTA | |
+| Barcode list | |
+| Cell line / ModelID table | Tab-separated, columns `Cell line`, `Model_ID` |
+| DepMap somatic mutations | [DepMap portal](https://depmap.org/portal/) |
+| Per-cell-line expression ranking | Output of `get_list_of_genes.py` |
+| `cellsnp-lite` output | Upstream pipeline |
+| Gene annotation | GENCODE v32 (Ensembl 98), GRCh38 |
+| Coverage tracks |`deepTools bamCoverage` output |
+| Count matrices | |
 
-- **Reference genome:** hg38, with `chr`-prefixed contigs.
+- **Reference genome:** hg38
 
 ---
 
@@ -119,6 +85,9 @@ BiocManager::install(c("Gviz", "BSgenome.Hsapiens.UCSC.hg38",
 ---
 
 ## Workflow
+
+### 0. Use DetectaBAM 
+Snakemake pipeline that creates demultiplexed BAMs, depth data and .bw files
 
 ### 1. Prepare per-line inputs
 
