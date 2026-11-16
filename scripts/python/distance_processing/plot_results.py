@@ -1,6 +1,8 @@
 import os
-import pandas as pd
 import numpy as np
+import pandas as pd
+import itertools
+from scipy.stats import mannwhitneyu
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -20,6 +22,19 @@ def plot_ecdf(df_all, title, save_path):
     plt.tight_layout()
     plt.savefig(save_path, dpi=300)
     plt.close(fig)
+
+
+def compare_groups(df, order=("not expressed", "expressed, 1<=k<=5", "expressed, k>=16")):
+    df = df.dropna(subset=["dist"])
+    groups = {g: df.loc[df["group"] == g, "dist"] for g in order}
+    for name, x in groups.items():
+        print(f"{name}: n={len(x)}, median={x.median():.0f}, "
+              f"IQR={x.quantile(.25):.0f}-{x.quantile(.75):.0f}")
+    pairs = list(itertools.combinations(order, 2))
+    p = [mannwhitneyu(groups[a], groups[b]).pvalue for a, b in pairs]
+    p_adj = np.minimum(1, np.array(p) * len(p))
+    for (a, b), raw, adj in zip(pairs, p, p_adj):
+        print(f"{a} vs {b}: p={raw:.3g}, adjusted p={adj:.3g}")
 
 
 if __name__ == '__main__':
@@ -47,7 +62,6 @@ if __name__ == '__main__':
                             )
         # Reformat the last column of cellsnp matrix
         vcf = parse_info(vcf)
-
         # Divide distances of expressed variants by thresholds k = [1,5] and k >= 16
         low = vcf[vcf["DP"].between(1, 5)].merge(expr_dist, on=["chr", "pos"])
         high = vcf[vcf["DP"] >= 16].merge(expr_dist, on=["chr", "pos"])
@@ -59,6 +73,10 @@ if __name__ == '__main__':
         ],
         ignore_index=True,
         )
+        # Compare groups
+        print(f"Cell line: {line}")
+        compare_groups(df_all)
+        print("\n")
         # Plot ECDF 
-        title = f"ECDF for {line}"
-        plot_ecdf(df_all,title, f"{plot_dir}/{line}_ecdf.png")
+        #title = f"ECDF for {line}"
+        #plot_ecdf(df_all,title, f"{plot_dir}/{line}_ecdf.png")
